@@ -3,4 +3,6 @@
 .project
 out/speaker
 out/waitkeys
+out/paint
+out/motor
 

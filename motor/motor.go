@@ -69,6 +69,18 @@ func clean() {
 func run(konec chan string) {
 	clean()
 	addLabel(ev3.LCD, 0, 10, "Ahoj lidi")
+	
+	a, err := ev3dev.TachoMotorFor("ev3-ports:outA", "lego-ev3-l-motor")	
+	if err != nil {
+		log.Fatalf("failed to find left motor in outA: %v", err)
+	}
+	
+	a.SetPosition(10)
+	
+	astat, _ := a.State()
+	aspeed, _ := a.Speed()
+	log.Printf("outA: %s %d", astat, aspeed)
+	
 	time.Sleep(30 * time.Second)
 }
 	
