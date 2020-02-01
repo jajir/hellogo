@@ -65,12 +65,24 @@ func run(konec chan string) {
 	Display.Clean()
 	Display.Write(0, 10, "Starting ...")
 
-	var motor1 Ev3lmotor = NewEv3lmotor("outA")
-	axisX := NewAxis(&motor1)
-	axisX.Init()
-	axisX.PrintInfo()
+	var touchSensor TouchSensor = NewTouchSensor("in1")
+	touchSensor.PrintInfo()
+	go touchSensor.watch(konec)
 
-	//	axisX.motor.PrintInfo()
+	//	var motor1 Ev3lmotor = NewEv3lmotor("lego-ev3-l-motor", "outA")
+	//	axisX := NewAxis(&motor1)
+	//	axisX.Init(float64(10))
+	//	axisX.PrintInfo()
+	//
+	//	var motor2 Ev3lmotor = NewEv3lmotor("lego-ev3-l-motor", "outC")
+	//	axisY := NewAxis(&motor2)
+	//	axisY.Init(float64(7))
+	//	axisY.PrintInfo()
+	//
+	//	var motor3 Ev3lmotor = NewEv3lmotor("lego-ev3-m-motor", "outB")
+	//	axisZ := NewAxis(&motor3)
+	//	axisZ.Init(float64(11))
+	//	axisZ.PrintInfo()
 
 	//Time to write previous function to console
 	time.Sleep(30 * time.Millisecond)

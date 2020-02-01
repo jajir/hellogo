@@ -17,18 +17,18 @@ func NewAxis(motor *Ev3lmotor) Axis {
 	return axis
 }
 
-func (axis *Axis) Init() {
+func (axis *Axis) Init(sensitivity float64) {
 	axis.motor.SetPolarity(ev3dev.Normal)
-	max, min := axis.runUntilObstacle()
+	axis.runUntilObstacle(sensitivity)
 	axis.motor.ReversePolarity()
-	axis.min, axis.max = axis.runUntilObstacle()
+	axis.min, axis.max = axis.runUntilObstacle(sensitivity)
 	axis.min = -axis.min
 	axis.max = -axis.max
 	//	log.Printf("min & max [%d, %d], [%d, %d]", min, max, axis.min, axis.max)
 	axis.motor.SetPolarity(ev3dev.Normal)
 }
 
-func (axis *Axis) runUntilObstacle() (startPos, finalPos int) {
+func (axis *Axis) runUntilObstacle(sensitivity float64) (startPos, finalPos int) {
 	motor := axis.motor
 	startPos = motor.Position()
 
@@ -40,7 +40,7 @@ func (axis *Axis) runUntilObstacle() (startPos, finalPos int) {
 
 	currentSpeed := motor.CurrentSpeed()
 
-	for count(speed, currentSpeed) {
+	for count(speed, currentSpeed, sensitivity) {
 		currentSpeed = motor.CurrentSpeed()
 		//		log.Printf("Target speed %d, current speed %d", speed, currentSpeed)
 		time.Sleep(10 * time.Millisecond)
@@ -53,9 +53,9 @@ func (axis *Axis) runUntilObstacle() (startPos, finalPos int) {
 	return startPos, finalPos
 }
 
-func count(speed, currentSpeed int) bool {
+func count(speed, currentSpeed int, sensitivity float64) bool {
 	//	log.Printf("Target speed %d, current speed %d", speed, currentSpeed)
-	return math.Abs(float64(speed-currentSpeed)) < float64(speed)/100*10
+	return math.Abs(float64(speed-currentSpeed)) < float64(speed)/100*sensitivity
 }
 
 func (axis *Axis) Range() int {

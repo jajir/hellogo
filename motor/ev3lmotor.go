@@ -9,10 +9,10 @@ type Ev3lmotor struct {
 	m *ev3dev.TachoMotor
 }
 
-func NewEv3lmotor(port string) Ev3lmotor {
-	a, err := ev3dev.TachoMotorFor("ev3-ports:"+port, "lego-ev3-l-motor")
+func NewEv3lmotor(motorType, port string) Ev3lmotor {
+	a, err := ev3dev.TachoMotorFor("ev3-ports:"+port, motorType)
 	if err != nil {
-		log.Fatalf("failed to find left motor in outA: %v", err)
+		log.Fatalf("failed to find motor in port %s: %v", port, err)
 	}
 	return Ev3lmotor{a}
 }
