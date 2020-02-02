@@ -6,33 +6,34 @@ import (
 )
 
 type Ev3lmotor struct {
-	m *ev3dev.TachoMotor
+	m    *ev3dev.TachoMotor
+	name string
 }
 
-func NewEv3lmotor(motorType, port string) Ev3lmotor {
+func NewEv3lmotor(motorType, port, name string) Ev3lmotor {
 	a, err := ev3dev.TachoMotorFor("ev3-ports:"+port, motorType)
 	if err != nil {
 		log.Fatalf("failed to find motor in port %s: %v", port, err)
 	}
-	return Ev3lmotor{a}
+	return Ev3lmotor{m: a, name: name}
 }
 
 func (m *Ev3lmotor) PrintInfo() {
 	a := m.m
 	for _, command := range a.Commands() {
-		log.Printf("Command    : %s", command)
+		log.Printf(m.name+" Command    : %s", command)
 	}
 	for _, command := range a.StopActions() {
-		log.Printf("Stop action: %s", command)
+		log.Printf(m.name+" Stop action: %s", command)
 	}
-	log.Printf("Driver     : %s", a.Driver())
-	log.Printf("Type       : %s", a.Type())
-	log.Printf("countPerRot: %d", a.CountPerRot())
+	log.Printf(m.name+" Driver     : %s", a.Driver())
+	log.Printf(m.name+" Type       : %s", a.Type())
+	log.Printf(m.name+" countPerRot: %d", a.CountPerRot())
 	p, _ := a.Polarity()
-	log.Printf("Polarity   : %s", p)
+	log.Printf(m.name+" Polarity   : %s", p)
 	pos, _ := a.Position()
-	log.Printf("Position   : %d", pos)
-	log.Printf("Max speed  : %d", a.MaxSpeed())
+	log.Printf(m.name+" Position   : %d", pos)
+	log.Printf(m.name+" Max speed  : %d", a.MaxSpeed())
 }
 
 func (m *Ev3lmotor) MaxSpeed() int {

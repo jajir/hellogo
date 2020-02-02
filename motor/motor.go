@@ -69,20 +69,20 @@ func run(errorChannel chan string) {
 	touchSensor.PrintInfo()
 	go touchSensor.watch(errorChannel)
 
-	//	var motor1 Ev3lmotor = NewEv3lmotor("lego-ev3-l-motor", "outA")
-	//	axisX := NewAxis(&motor1)
-	//	axisX.Init(float64(10))
-	//	axisX.PrintInfo()
-	//
-	//	var motor2 Ev3lmotor = NewEv3lmotor("lego-ev3-l-motor", "outC")
-	//	axisY := NewAxis(&motor2)
-	//	axisY.Init(float64(7))
-	//	axisY.PrintInfo()
-	//
-	//	var motor3 Ev3lmotor = NewEv3lmotor("lego-ev3-m-motor", "outB")
-	//	axisZ := NewAxis(&motor3)
-	//	axisZ.Init(float64(11))
-	//	axisZ.PrintInfo()
+	var motor1 Ev3lmotor = NewEv3lmotor("lego-ev3-l-motor", "outA", "motorX")
+	axisX := NewAxis(&motor1)
+	axisX.Init(float64(10))
+	axisX.PrintInfo()
+
+	var motor2 Ev3lmotor = NewEv3lmotor("lego-ev3-l-motor", "outC", "motorY")
+	axisY := NewAxis(&motor2)
+	axisY.Init(float64(7))
+	axisY.PrintInfo()
+
+	var motor3 Ev3lmotor = NewEv3lmotor("lego-ev3-m-motor", "outB", "motorZ")
+	axisZ := NewAxis(&motor3)
+	axisZ.Init(float64(11))
+	axisZ.PrintInfo()
 
 	//Time to write previous function to console
 	time.Sleep(30 * time.Millisecond)
