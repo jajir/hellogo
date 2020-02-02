@@ -9,19 +9,19 @@ import (
 
 func main() {
 
-	var konec = make(chan string)
+	var errorChannel = make(chan string)
 
-	go waitingForBack(konec)
-	go run(konec)
+	go waitingForBack(errorChannel)
+	go run(errorChannel)
 
-	k := <-konec
+	k := <-errorChannel
 	log.Info("Shutting down, bacause of " + k + "\n")
 	Lights.TurnOff()
 	StopAllMotors()
 	Display.Close()
 }
 
-func waitingForBack(konec chan string) {
+func waitingForBack(errorChannel chan string) {
 	w, err := ev3dev.NewButtonWaiter()
 	if err != nil {
 		log.Fatalf("failed to create button waiter: %v", err)
@@ -31,7 +31,7 @@ func waitingForBack(konec chan string) {
 		fmt.Printf("%+v\n", e)
 		if 1 == e.Button {
 			fmt.Printf("Zpet")
-			konec <- "Button Back was pressed."
+			errorChannel <- "Button Back was pressed."
 		}
 	}
 }
@@ -60,14 +60,14 @@ func StopMotor(a *ev3dev.TachoMotor) {
 	}
 }
 
-func run(konec chan string) {
+func run(errorChannel chan string) {
 	Lights.GreenTurnOn()
 	Display.Clean()
 	Display.Write(0, 10, "Starting ...")
 
 	var touchSensor TouchSensor = NewTouchSensor("in1")
 	touchSensor.PrintInfo()
-	go touchSensor.watch(konec)
+	go touchSensor.watch(errorChannel)
 
 	//	var motor1 Ev3lmotor = NewEv3lmotor("lego-ev3-l-motor", "outA")
 	//	axisX := NewAxis(&motor1)

@@ -34,7 +34,7 @@ func (ts *TouchSensor) PrintInfo() {
 
 }
 
-func (ts *TouchSensor) watch(konec chan string) {
+func (ts *TouchSensor) watch(eventChanel chan string) {
 	for {
 		time.Sleep(10 * time.Millisecond)
 		s := ts.s
@@ -47,7 +47,7 @@ func (ts *TouchSensor) watch(konec chan string) {
 			if v == "0" {
 				if ts.status == 1 {
 					ts.status = 0
-					konec <- "Touch sensor was pressed."
+					eventChanel <- "Touch sensor was released."
 				}
 			}
 			if v == "1" {
@@ -55,8 +55,6 @@ func (ts *TouchSensor) watch(konec chan string) {
 					ts.status = 1
 				}
 			}
-
 		}
-
 	}
 }
