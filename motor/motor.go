@@ -5,6 +5,7 @@ import (
 	ev3dev "github.com/ev3go/ev3dev"
 	log "github.com/sirupsen/logrus"
 	"time"
+	"sync"
 )
 
 func main() {
@@ -66,22 +67,26 @@ func run(errorChannel chan string) {
 	Display.Write(0, 10, "Starting ...")
 
 	var touchSensor TouchSensor = NewTouchSensor("in1")
-	touchSensor.PrintInfo()
 	go touchSensor.watch(errorChannel)
-
 	var motor1 Ev3lmotor = NewEv3lmotor("lego-ev3-l-motor", "outA", "motorX")
 	axisX := NewAxis(&motor1)
-	axisX.Init(float64(10))
-	axisX.PrintInfo()
 
 	var motor2 Ev3lmotor = NewEv3lmotor("lego-ev3-l-motor", "outC", "motorY")
 	axisY := NewAxis(&motor2)
-	axisY.Init(float64(7))
-	axisY.PrintInfo()
 
 	var motor3 Ev3lmotor = NewEv3lmotor("lego-ev3-m-motor", "outB", "motorZ")
 	axisZ := NewAxis(&motor3)
-	axisZ.Init(float64(11))
+
+	var wg sync.WaitGroup
+	wg.Add(3)
+	go axisX.Init(&wg, float64(10))
+	go axisY.Init(&wg, float64(7))
+	go axisZ.Init(&wg, float64(11))
+	wg.Wait()
+	
+	touchSensor.PrintInfo()
+	axisX.PrintInfo()
+	axisY.PrintInfo()
 	axisZ.PrintInfo()
 
 	//Time to write previous function to console
@@ -118,17 +123,3 @@ func run(errorChannel chan string) {
 //		log.Fatalf("Motor failed: %v", err)
 //	}
 //}
-
-func PrintStats(a *ev3dev.TachoMotor) {
-	Display.Clean()
-	for {
-		astat, _ := a.State()
-		aspeed, _ := a.Speed()
-
-		msg := fmt.Sprintf("outA: %s %d", astat, aspeed)
-		log.Printf(msg)
-
-		Display.Write(10, 10, msg)
-		time.Sleep(10 * time.Millisecond)
-	}
-}

@@ -5,6 +5,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"math"
 	"time"
+	"sync"
 )
 
 type Axis struct {
@@ -17,7 +18,8 @@ func NewAxis(motor *Ev3lmotor) Axis {
 	return axis
 }
 
-func (axis *Axis) Init(sensitivity float64) {
+func (axis *Axis) Init(wg *sync.WaitGroup, sensitivity float64) {
+	defer wg.Done()
 	axis.motor.SetPolarity(ev3dev.Normal)
 	axis.runUntilObstacle(sensitivity)
 	axis.motor.ReversePolarity()
@@ -63,5 +65,5 @@ func (axis *Axis) Range() int {
 }
 
 func (axis *Axis) PrintInfo() {
-	log.Printf("Motor {min=%d, max=%d, range=%d}", axis.min, axis.max, axis.Range())
+	log.Printf("Motor %v {min=%d, max=%d, range=%d}",axis.motor.name, axis.min, axis.max, axis.Range())
 }
