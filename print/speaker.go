@@ -13,7 +13,7 @@ const SoundPath = "/dev/input/by-path/platform-sound-event"
 
 var speaker = ev3dev.NewSpeaker(SoundPath)
 
-func main() {
+func Speaker() {
 	must(speaker.Init())
 	defer speaker.Close()
 
