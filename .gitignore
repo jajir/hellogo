@@ -1,10 +1,5 @@
 *~
 .DS_Store
 .project
-out/speaker
-out/waitkeys
-out/paint
-out/motor
-out/find
-out/print
+out
 

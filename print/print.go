@@ -2,16 +2,24 @@ package main
 
 import (
 	"fmt"
+	"github.com/jajir/hellogo/lev3"
 	"time"
 )
 
 func main() {
-	Display.Clean()
-	Display.Write(0, 10, "Starting ...")
+	defer lev3.Display.Close()
+	defer lev3.Speaker.Close()
+//	defer Lights.TurnOff()
+	
+//	Lights.GreenTurnOn()
+
+	lev3.Display.Clean()
+	lev3.Display.Write(0, 10, "Starting ...")
 
 	fmt.Println("Ahoj")
 
-	time.Sleep(30 * time.Millisecond)
+	lev3.Speaker.Beep()
 
-	Display.Close()
+	time.Sleep(30 * time.Millisecond)
+//	StopAllMotors()
 }

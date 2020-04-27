@@ -1,4 +1,4 @@
-package main
+package lev3
 
 import (
 	ev3dev "github.com/ev3go/ev3dev"
