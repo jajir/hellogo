@@ -9,9 +9,9 @@ import (
 func main() {
 	defer lev3.Display.Close()
 	defer lev3.Speaker.Close()
-//	defer Lights.TurnOff()
+	defer Lights.TurnOff()
 	
-//	Lights.GreenTurnOn()
+	Lights.GreenTurnOn()
 
 	lev3.Display.Clean()
 	lev3.Display.Write(0, 10, "Starting ...")
@@ -21,5 +21,4 @@ func main() {
 	lev3.Speaker.Beep()
 
 	time.Sleep(30 * time.Millisecond)
-//	StopAllMotors()
 }
