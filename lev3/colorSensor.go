@@ -2,24 +2,24 @@ package lev3
 
 import (
 	ev3dev "github.com/ev3go/ev3dev"
-	log "github.com/sirupsen/logrus"
+	"log"
 	"time"
 )
 
-type TouchSensor struct {
+type ColorSensor struct {
 	s      *ev3dev.Sensor
 	status int
 }
 
-func NewTouchSensor(port string) TouchSensor {
-	s, err := ev3dev.SensorFor("ev3-ports:"+port, "lego-ev3-touch")
+func NewColorSensor(port string) ColorSensor {
+	s, err := ev3dev.SensorFor(port, "lego-ev3-color")
 	if err != nil {
 		log.Fatalf("failed to find touch sensor: %v", err)
 	}
-	return TouchSensor{s, 0}
+	return ColorSensor{s, 0}
 }
 
-func (ts *TouchSensor) PrintInfo() {
+func (ts *ColorSensor) PrintInfo() {
 	s := ts.s
 	log.Printf("Type           : %s", s.Type())
 	log.Printf("Driver         : %s", s.Driver())
@@ -33,27 +33,18 @@ func (ts *TouchSensor) PrintInfo() {
 	}
 }
 
-func (ts *TouchSensor) Watch(eventChanel chan string) {
+func (ts *ColorSensor) TestAmbient() {
+	s := ts.s
+	s.SetMode("COL-AMBIENT")
 	for {
-		time.Sleep(10 * time.Millisecond)
-		s := ts.s
 		n := s.NumValues()
 		for i := 0; i < n; i++ {
 			v, err := s.Value(i)
 			if err != nil {
 				log.Fatalf("failed to get of value %d: %v", i, err)
 			}
-			if v == "0" {
-				if ts.status == 1 {
-					ts.status = 0
-					eventChanel <- "Touch sensor was released."
-				}
-			}
-			if v == "1" {
-				if ts.status == 0 {
-					ts.status = 1
-				}
-			}
+			log.Printf("Number of values: %d, cx: %d, value '%s'", n, i, v)
 		}
+		time.Sleep(10 * time.Millisecond)
 	}
 }
