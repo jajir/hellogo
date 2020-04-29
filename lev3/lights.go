@@ -41,7 +41,7 @@ func (l *Leds) GreenTurnOn() {
 
 func (l *Leds) HeartBeat() {
 	l.running = true
-	var max = getMaxBrightness()
+	var max = getMaxBrightness() / 2
 	var step float64 = 0
 	var increment float64 = 0.05
 	for l.running == true {

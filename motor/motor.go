@@ -4,8 +4,8 @@ import (
 	"fmt"
 	ev3dev "github.com/ev3go/ev3dev"
 	log "github.com/sirupsen/logrus"
-	"time"
 	"sync"
+	"time"
 )
 
 func main() {
@@ -83,7 +83,7 @@ func run(errorChannel chan string) {
 	go axisY.Init(&wg, float64(7))
 	go axisZ.Init(&wg, float64(11))
 	wg.Wait()
-	
+
 	touchSensor.PrintInfo()
 	axisX.PrintInfo()
 	axisY.PrintInfo()

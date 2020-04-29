@@ -29,11 +29,11 @@ func (beeper *Beeper) Close() {
 func (beeper *Beeper) Beep() {
 	// Play tone at 440Hz for 200ms...
 	must(beeper.speaker.Tone(440), "Set tone to 440")
-	time.Sleep(200 * time.Millisecond)
+	time.Sleep(20 * time.Millisecond)
 
 	// play tone at 220Hz for 200ms...
 	must(beeper.speaker.Tone(220), "Set tone to 220")
-	time.Sleep(200 * time.Millisecond)
+	time.Sleep(20 * time.Millisecond)
 
 	// then stop tone playback.
 	must(beeper.speaker.Tone(0), "Set tone to 0")
