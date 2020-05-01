@@ -1,5 +1,12 @@
 package main
 
+/*
+TODO:
+Pri startu nacit stav led a pri konci ho obnovit.
+Tlacitka na kostce spusti kalibraci.
+NOTES:
+Color sensor doesn't work correctly on dayligh.
+*/
 import (
 	ev3dev "github.com/ev3go/ev3dev"
 	"github.com/jajir/hellogo/lev3"
@@ -11,6 +18,7 @@ import (
 )
 
 var touchSensor lev3.TouchSensor
+var motorPen, motorPortal, motorFeeder lev3.Ev3lmotor
 
 func main() {
 	defer lev3.Display.Close()
@@ -20,6 +28,9 @@ func main() {
 	go lev3.Lights.HeartBeat()
 
 	touchSensor = lev3.NewTouchSensor("in1")
+	motorPen = lev3.NewEv3lmotor("lego-ev3-m-motor", "outB", "motorPortal")
+	motorFeeder = lev3.NewEv3lmotor("lego-ev3-l-motor", "outD", "motorPortal")
+	motorPortal = lev3.NewEv3lmotor("lego-ev3-l-motor", "outC", "motorPortal")
 
 	if touchSensor.IsPressed() {
 		touchSensor.WaitUntilReleased()
@@ -40,20 +51,71 @@ func run(errorChannel chan string) {
 	lev3.Display.Clean()
 	lev3.Display.Write(0, 10, "Starting ...")
 	log.Println("Ahoj")
+	preparePen()
+
+	drawRectangle()
 
 	//	calibratePortal()
-	//	calibrateFeeding()
+	//	drawRectangle()
+	//	calibratePortal()
+	//	preparePaper()
 	//	calibratePen()
-
-	//	col := lev3.NewColorSensor("ev3-ports:in4")
-	//	col.PrintInfo()
-	//	col.TestAmbient()
 
 	time.Sleep(31 * time.Minute)
 }
 
-func calibrateFeeding() {
+func drawRectangle() {
+	//pen down
+	speed := motorPen.MaxSpeed() / 6
+	motorPen.Turn(speed, -100)
+
+	pageHeight := 1000
+	pageWidth := 1000
+
+	//page width 1074, it's porla
+	motorPortal.Turn(speed, pageWidth/2)
+
+	motorFeeder.Turn(speed, -pageHeight)
+
+	motorPortal.Turn(speed, -pageWidth)
+
+	motorFeeder.Turn(speed, pageHeight)
+
+	motorPortal.Turn(speed, pageWidth/2)
+
+	//pen up
+	motorPen.Turn(speed, 100)
+}
+
+func preparePen() {
+	speed := motorPen.MaxSpeed() / 6
+	motorPen.Turn(speed, -1200)
+}
+
+func preparePaper() {
 	//kdyz je 1, pak ej papir
+	col := lev3.NewColorSensor("ev3-ports:in4")
+	col.PrintInfo()
+
+	//	for {
+	//		log.Printf("Is covered: %v", col.IsCovered())
+	//	}
+
+	if col.IsCovered() {
+		log.Printf("Is covered")
+		motorFeeder.StartMotor(100)
+		for col.IsCovered() {
+		}
+		motorFeeder.StopMotor()
+	} else {
+		log.Printf("Is not covered")
+		motorFeeder.StartMotor(-100)
+		for !col.IsCovered() {
+		}
+		motorFeeder.StopMotor()
+	}
+	//	col.TestReflected()
+	log.Printf("Paper is ready")
 }
 
 func calibratePortal() {
@@ -72,7 +134,7 @@ func calibratePortal() {
 
 func calibratePen() int {
 	/* kalibrace funguje pokud je pero ve
-	 vytazene pozici, jinak vraci zkreslene hodnoty, default je 1250. */
+	vytazene pozici, jinak vraci zkreslene hodnoty, default je 1250. */
 	var motor lev3.Ev3lmotor = lev3.NewEv3lmotor("lego-ev3-m-motor", "outB", "motorPortal")
 
 	var startPos, endPos int
@@ -106,6 +168,10 @@ func calibratePen() int {
 }
 
 func StopAllMotors() {
+	//turn pen back
+	speed := motorPen.MaxSpeed() / 6
+	motorPen.Turn(speed, 1200)
+
 	StopMotors("lego-ev3-m-motor")
 	StopMotors("lego-ev3-l-motor")
 }

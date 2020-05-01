@@ -96,3 +96,11 @@ func (m *Ev3lmotor) Position() int {
 	}
 	return pos
 }
+
+func (m *Ev3lmotor) Turn(speed, point int) {
+	motor := m.m
+	motor.SetSpeedSetpoint(speed)
+	motor.SetPositionSetpoint(point)
+	motor.SetStopAction("hold")
+	motor.Command("run-to-rel-pos")
+}

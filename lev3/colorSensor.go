@@ -3,11 +3,12 @@ package lev3
 import (
 	ev3dev "github.com/ev3go/ev3dev"
 	"log"
+	"strconv"
 	"time"
 )
 
 type ColorSensor struct {
-	s      *ev3dev.Sensor
+	sensor *ev3dev.Sensor
 	status int
 }
 
@@ -20,7 +21,7 @@ func NewColorSensor(port string) ColorSensor {
 }
 
 func (ts *ColorSensor) PrintInfo() {
-	s := ts.s
+	s := ts.sensor
 	log.Printf("Type           : %s", s.Type())
 	log.Printf("Driver         : %s", s.Driver())
 	log.Printf("BinDataFormat  : %s", s.BinDataFormat())
@@ -31,20 +32,38 @@ func (ts *ColorSensor) PrintInfo() {
 	for _, mode := range s.Modes() {
 		log.Printf("Modes         : %s", mode)
 	}
+	v, _ := s.Mode()
+	log.Printf("Current Mode   : %s", v)
 }
 
-func (ts *ColorSensor) TestAmbient() {
-	s := ts.s
-	s.SetMode("COL-AMBIENT")
+func (ts *ColorSensor) TestReflected() {
+	ts.sensor.SetMode("COL-AMBIENT")
 	for {
-		n := s.NumValues()
-		for i := 0; i < n; i++ {
-			v, err := s.Value(i)
-			if err != nil {
-				log.Fatalf("failed to get of value %d: %v", i, err)
-			}
-			log.Printf("Number of values: %d, cx: %d, value '%s'", n, i, v)
-		}
+		v := ts.ReadValue()
+		log.Printf("Reading color sensor value '%d'", v)
 		time.Sleep(10 * time.Millisecond)
 	}
+}
+
+func (ts *ColorSensor) ReadValue() int {
+	v, err := ts.sensor.Value(0)
+	if err != nil {
+		log.Fatalf("Unable to read value from color sensor, bacause of: %v", err)
+	}
+	out, err := strconv.Atoi(v)
+	if err != nil {
+		log.Fatalf("Unable to converts value '%s' to int", v)
+	}
+	return out
+}
+
+func (ts *ColorSensor) IsCovered() bool {
+	i1 := ts.ReadValue()
+	time.Sleep(10 * time.Millisecond)
+	i2 := ts.ReadValue()
+	time.Sleep(10 * time.Millisecond)
+	i3 := ts.ReadValue()
+	f := (float32(i1) + float32(i2) + float32(i3)) / 3.0
+//	log.Printf("Reading color sensor value %v, %v, %v, avg: %f", i1, i2, i3, f)
+	return f > 0.3
 }

@@ -3,6 +3,7 @@ package lev3
 import (
 	ev3dev "github.com/ev3go/ev3dev"
 	log "github.com/sirupsen/logrus"
+	"time"
 )
 
 type Ev3lmotor struct {
@@ -95,4 +96,15 @@ func (m *Ev3lmotor) Position() int {
 		log.Fatalf("Motor start posion reading failed: %v", err)
 	}
 	return pos
+}
+
+func (m *Ev3lmotor) Turn(speed, point int) {
+	motor := m.m
+	motor.SetSpeedSetpoint(speed)
+	motor.SetPositionSetpoint(point)
+	motor.SetStopAction("hold")
+	motor.Command("run-to-rel-pos")
+
+	ev3dev.Wait(motor, ev3dev.Running, 0, 0, false, 20*time.Second)
+
 }

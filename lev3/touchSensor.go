@@ -7,8 +7,7 @@ import (
 )
 
 type TouchSensor struct {
-	//FIXME rename to sensor
-	s      *ev3dev.Sensor
+	sensor *ev3dev.Sensor
 	status int
 }
 
@@ -24,7 +23,7 @@ func NewTouchSensor(port string) TouchSensor {
 }
 
 func (ts *TouchSensor) PrintInfo() {
-	s := ts.s
+	s := ts.sensor
 	log.Printf("Type           : %s", s.Type())
 	log.Printf("Driver         : %s", s.Driver())
 	log.Printf("BinDataFormat  : %s", s.BinDataFormat())
@@ -40,8 +39,8 @@ func (ts *TouchSensor) PrintInfo() {
 func (ts *TouchSensor) Watch(eventChanel chan string) {
 	for {
 		time.Sleep(10 * time.Millisecond)
-		s := ts.s
-		v, err := s.Value(0)
+		sensor := ts.sensor
+		v, err := sensor.Value(0)
 		if err != nil {
 			log.Fatalf("failed to get of value from touch sensor. Err: %v", err)
 		}
@@ -60,8 +59,7 @@ func (ts *TouchSensor) Watch(eventChanel chan string) {
 }
 
 func (ts *TouchSensor) IsPressed() bool {
-	sensor := ts.s
-	val, err := sensor.Value(0)
+	val, err := ts.sensor.Value(0)
 	if err != nil {
 		log.Fatalf("failed to get of value from touch sensor. Err: %v", err)
 	}
@@ -69,12 +67,11 @@ func (ts *TouchSensor) IsPressed() bool {
 }
 
 func (ts *TouchSensor) WaitUntilPressed() {
-	sensor := ts.s
 	var val string
 	for val != "1" {
 		time.Sleep(10 * time.Millisecond)
 		var err error
-		val, err = sensor.Value(0)
+		val, err = ts.sensor.Value(0)
 		if err != nil {
 			log.Fatalf("failed to get of value from touch sensor. Err: %v", err)
 		}
@@ -82,12 +79,11 @@ func (ts *TouchSensor) WaitUntilPressed() {
 }
 
 func (ts *TouchSensor) WaitUntilReleased() {
-	sensor := ts.s
 	var val string
 	for val != "0" {
 		time.Sleep(10 * time.Millisecond)
 		var err error
-		val, err = sensor.Value(0)
+		val, err = ts.sensor.Value(0)
 		if err != nil {
 			log.Fatalf("failed to get of value from touch sensor. Err: %v", err)
 		}
