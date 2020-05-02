@@ -12,3 +12,7 @@ For upload program to `/home/robot` directory:
 ```
 scp hellogo robot@192.168.1.46:/home/robot
 ```
+
+##Print 
+
+program `print` could print simple drawing with [https://jkbrickworks.com/telegraph-machine-and-printer/](https://jkbrickworks.com/telegraph-machine-and-printer/). 

@@ -16,7 +16,7 @@ type Leds struct {
 func NewLeds() Leds {
 	var out = *new(Leds)
 	out.running = false
-	return *new(Leds)
+	return out
 }
 
 func (l *Leds) TurnOff() {

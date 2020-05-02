@@ -106,5 +106,8 @@ func (m *Ev3lmotor) Turn(speed, point int) {
 	motor.Command("run-to-rel-pos")
 
 	ev3dev.Wait(motor, ev3dev.Running, 0, 0, false, 20*time.Second)
+}
 
+func (m *Ev3lmotor) GetMotor() *ev3dev.TachoMotor {
+	return m.m
 }

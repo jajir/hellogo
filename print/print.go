@@ -53,7 +53,8 @@ func run(errorChannel chan string) {
 	log.Println("Ahoj")
 	preparePen()
 
-	drawRectangle()
+	//	drawRectangle()
+	drawLissajous()
 
 	//	calibratePortal()
 	//	drawRectangle()
@@ -62,6 +63,62 @@ func run(errorChannel chan string) {
 	//	calibratePen()
 
 	time.Sleep(31 * time.Minute)
+}
+
+func drawLissajous() {
+	maxSpeed := motorPen.MaxSpeed()
+	log.Printf("step 0\n")
+
+	var lis lev3.Lissajous = lev3.NewLissajous(1000, 1000, 3, 5)
+	log.Printf("step 1\n")
+
+	//pen is at [500,0] move it to start position.
+	startPoint := lis.GetStartPoint()
+	motorPortal.Turn(maxSpeed, startPoint.GetX()-500)
+	motorFeeder.Turn(maxSpeed, -startPoint.GetY())
+	motorPen.Turn(maxSpeed, -200) //pen down
+	log.Printf("step 2\n")
+
+	for i := 0; i < lis.GetStepsCount(); i++ {
+		diff := lis.GetStepDiff(i)
+		motorX := motorPortal.GetMotor()
+		motorY := motorFeeder.GetMotor()
+		if diff.GetX() > diff.GetY() {
+			//x is maxSpeed, y speed will be counted
+			speedX := maxSpeed
+			speedY := int(math.Round(float64(diff.GetY()) / float64(diff.GetX()) * float64(maxSpeed)))
+
+			motorX.SetSpeedSetpoint(speedX)
+			motorX.SetPositionSetpoint(diff.GetX())
+			motorX.SetStopAction("hold")
+			motorX.Command("run-to-rel-pos")
+
+			motorY.SetSpeedSetpoint(speedY)
+			motorY.SetPositionSetpoint(diff.GetY())
+			motorY.SetStopAction("hold")
+			motorY.Command("run-to-rel-pos")
+		} else {
+			//y is maxSpeed, x speed will be counted
+			speedX := int(math.Round(float64(diff.GetX()) / float64(diff.GetY()) * float64(maxSpeed)))
+			speedY := maxSpeed
+
+			motorX.SetSpeedSetpoint(speedX)
+			motorX.SetPositionSetpoint(diff.GetX())
+			motorX.SetStopAction("hold")
+			motorX.Command("run-to-rel-pos")
+
+			motorY.SetSpeedSetpoint(speedY)
+			motorY.SetPositionSetpoint(diff.GetY())
+			motorY.SetStopAction("hold")
+			motorY.Command("run-to-rel-pos")
+		}
+		//waint until motors runs to selected place
+		ev3dev.Wait(motorX, ev3dev.Running, 0, 0, false, 20*time.Second)
+		ev3dev.Wait(motorY, ev3dev.Running, 0, 0, false, 20*time.Second)
+	}
+	lis.PrintInfo()
+
+	motorPen.Turn(maxSpeed, 200) //pen up
 }
 
 func drawRectangle() {
