@@ -1,7 +1,10 @@
 package lev3
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
+	"io"
 	"math"
 )
 
@@ -48,18 +51,35 @@ func (l *Lissajous) Prepare() {
 	}
 }
 
-func (l *Lissajous) GetStartPoint() Point {
+func (l Lissajous) GetStartPoint() Point {
 	return l.points[0]
 }
 
-func (l *Lissajous) GetStepsCount() int {
+func (l Lissajous) GetStepsCount() int {
 	return len(l.points) - 1
 }
 
-func (l *Lissajous) GetStep(index int) Point {
+func (l Lissajous) GetStep(index int) Point {
 	return l.points[index+1]
 }
 
-func (l *Lissajous) GetStepDiff(index int) Point {
+func (l Lissajous) GetStepDiff(index int) Point {
 	return l.points[index+1].Subst(&l.points[index])
+}
+
+func (l *Lissajous) Marshal() (io.Reader, error) {
+	b, err := json.MarshalIndent(l, "", "\t")
+	if err != nil {
+		return nil, err
+	}
+	return bytes.NewReader(b), nil
+}
+
+func (l *Lissajous) GetPicture() Picture {
+	var out Picture = *new(Picture)
+	out.Min = Point{0, 0}
+	out.Max = Point{int(l.maxX), int(l.maxY)}
+	out.Points = make([]Point, len(l.points))
+	copy(out.Points, l.points)
+	return out
 }

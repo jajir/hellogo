@@ -1,7 +1,9 @@
 package lev3
 
 import (
+	"encoding/json"
 	"math"
+	"fmt"
 )
 
 type Point struct {
@@ -12,7 +14,8 @@ func NewPoint(x, y int) Point {
 	return Point{x, y}
 }
 
-func (ts *Point) PrintInfo() {
+func (p Point) String() string {
+	return fmt.Sprintf("x=%v, y=%v", p.x, p.y)
 }
 
 func (point *Point) Eq(p *Point) bool {
@@ -34,4 +37,21 @@ func (p *Point) GetX() int {
 
 func (p *Point) GetY() int {
 	return p.y
+}
+
+type privatePoint struct {
+	X int `json:"x"`
+	Y int `json:"y"`
+}
+
+func (p Point) MarshalJSON() ([]byte, error) {
+	return json.Marshal(privatePoint{p.x, p.y})
+}
+
+func (p *Point) UnmarshalJSON(b []byte) error {
+	pp := new(privatePoint)
+	json.Unmarshal(b, &pp)
+	p.x = pp.X
+	p.y = pp.Y
+	return nil
 }

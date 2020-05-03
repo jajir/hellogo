@@ -8,10 +8,13 @@ NOTES:
 Color sensor doesn't work correctly on dayligh.
 */
 import (
+	"encoding/json"
 	ev3dev "github.com/ev3go/ev3dev"
 	"github.com/jajir/hellogo/lev3"
+	"io/ioutil"
 	"log"
 	"math"
+	"os"
 	"strconv"
 	"sync"
 	"time"
@@ -39,7 +42,13 @@ func main() {
 	}
 
 	go touchSensor.Watch(errorChannel)
-	go run(errorChannel)
+
+	argsWithoutProg := os.Args[1:]
+	if len(argsWithoutProg) > 0 {
+		go drawFile(errorChannel, argsWithoutProg[0])
+	} else {
+		go run(errorChannel)
+	}
 
 	k := <-errorChannel
 	log.Printf("Shutting down, bacause of %s.\n", k)
@@ -53,9 +62,7 @@ func run(errorChannel chan string) {
 	log.Println("Ahoj")
 	preparePen()
 
-	//	drawRectangle()
-	drawLissajous()
-
+	drawRectangle()
 	//	calibratePortal()
 	//	drawRectangle()
 	//	calibratePortal()
@@ -65,22 +72,39 @@ func run(errorChannel chan string) {
 	time.Sleep(31 * time.Minute)
 }
 
-func drawLissajous() {
-	maxSpeed := motorPen.MaxSpeed()
+func drawFile(errorChannel chan string, file string) {
+	lev3.Display.Clean()
+	lev3.Display.Write(0, 10, "Budu malovat podle souboru ...")
+	log.Println("Budu malovat podle souboru")
+	preparePen()
+
+	dat, err := ioutil.ReadFile("pok.txt")
+	if err != nil {
+		log.Fatalf("Unable to open file. %v\n", err)
+	}
+	var pic lev3.Picture
+	err = json.Unmarshal(dat, &pic)
+	if err != nil {
+		log.Fatalf("Unable to unmarshal data. %v\n", err)
+	}
+	draw(pic)
+}
+
+func draw(pic lev3.Drawable){
+		maxSpeed := motorPen.MaxSpeed()
 	log.Printf("step 0\n")
 
-	var lis lev3.Lissajous = lev3.NewLissajous(1000, 1000, 3, 5)
 	log.Printf("step 1\n")
 
 	//pen is at [500,0] move it to start position.
-	startPoint := lis.GetStartPoint()
+	startPoint := pic.GetStartPoint()
 	motorPortal.Turn(maxSpeed, startPoint.GetX()-500)
 	motorFeeder.Turn(maxSpeed, -startPoint.GetY())
 	motorPen.Turn(maxSpeed, -200) //pen down
 	log.Printf("step 2\n")
 
-	for i := 0; i < lis.GetStepsCount(); i++ {
-		diff := lis.GetStepDiff(i)
+	for i := 0; i < pic.GetStepsCount(); i++ {
+		diff := pic.GetStepDiff(i)
 		motorX := motorPortal.GetMotor()
 		motorY := motorFeeder.GetMotor()
 		if diff.GetX() > diff.GetY() {
@@ -116,7 +140,6 @@ func drawLissajous() {
 		ev3dev.Wait(motorX, ev3dev.Running, 0, 0, false, 20*time.Second)
 		ev3dev.Wait(motorY, ev3dev.Running, 0, 0, false, 20*time.Second)
 	}
-	lis.PrintInfo()
 
 	motorPen.Turn(maxSpeed, 200) //pen up
 }
