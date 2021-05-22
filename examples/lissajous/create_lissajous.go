@@ -9,13 +9,6 @@ import (
 	"os"
 )
 
-var palette = []color.Color{color.White, color.Black}
-
-const (
-	whiteIndex = 0 // first color in palette
-	blackIndex = 1 // next color in palette
-)
-
 func main() {
 	lissajous(os.Stdout)
 }
@@ -23,8 +16,8 @@ func lissajous(out io.Writer) {
 	const (
 		maxX    = 1000.0
 		maxY    = 1000.0
-		cyclesX = 3.0 // kolil vrcholu to bude mit do stran
-		cyclesY = 5.0  //kolil vrcholu to bude mit nahoru a dolu
+		cyclesX = 3.0 // kolik vrcholu to bude mit do stran
+		cyclesY = 5.0 //kolik vrcholu to bude mit nahoru a dolu
 	)
 
 	var img = image.NewRGBA(image.Rect(0, 0, maxX, maxY))

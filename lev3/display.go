@@ -1,13 +1,14 @@
 package lev3
 
 import (
+	"image"
+	"image/color"
+	"image/draw"
+
 	ev3 "github.com/ev3go/ev3"
 	"golang.org/x/image/font"
 	"golang.org/x/image/font/basicfont"
 	"golang.org/x/image/math/fixed"
-	"image"
-	"image/color"
-	"image/draw"
 )
 
 /**

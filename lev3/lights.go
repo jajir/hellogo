@@ -1,10 +1,11 @@
 package lev3
 
 import (
-	ev3 "github.com/ev3go/ev3"
 	"log"
-	"time"
 	"math"
+	"time"
+
+	ev3 "github.com/ev3go/ev3"
 )
 
 var Lights = NewLeds()
@@ -44,9 +45,9 @@ func (l *Leds) HeartBeat() {
 	var max = getMaxBrightness() / 2
 	var step float64 = 0
 	var increment float64 = 0.05
-	for l.running == true {
+	for l.running {
 		val := int(math.Abs(math.Sin(step)) * float64(max))
-		step+=increment
+		step += increment
 		ev3.RedLeft.SetBrightness(val)
 		ev3.RedRight.SetBrightness(val)
 		time.Sleep(30 * time.Millisecond)
@@ -60,4 +61,3 @@ func getMaxBrightness() int {
 	}
 	return max
 }
-

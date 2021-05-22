@@ -1,9 +1,10 @@
 package lev3
 
 import (
+	"time"
+
 	ev3dev "github.com/ev3go/ev3dev"
 	log "github.com/sirupsen/logrus"
-	"time"
 )
 
 type Ev3lmotor struct {
