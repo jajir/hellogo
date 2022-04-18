@@ -24,7 +24,7 @@ scp hellogo robot@192.168.1.46:/home/robot
 
 ### Switch off Brickman
 
-When ev3dev starts it launch brcikman user interface. It's nice but it controll scrren and catch buttons. To stop brickan user interface use:
+When ev3dev starts it launch brickman user interface. It's nice but it controll scrren and catch buttons. To stop brickan user interface use:
 ```
 sudo systemctl stop brickman
 ```
