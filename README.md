@@ -55,5 +55,17 @@ When ev3dev starts it launch brickman user interface. It's nice but it controll 
 sudo systemctl stop brickman
 ```
 
+### Switch off Brickman permanently
+
+To stop starting brickman after loading exute following:
+```
+sudo systemctl disable brickman
+```
+
+Command to let brickman start after booting again is:
+```
+sudo systemctl enable brickman
+```
+
 [1]: https://jkbrickworks.com/telegraph-machine-and-printer/ "printer building instruction"
 [2]: https://github.com/ev3go/ev3dev "https://github.com/ev3go/ev3dev"

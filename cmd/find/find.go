@@ -7,6 +7,8 @@
 // The program should be run from the command line after attaching a device
 // to the ev3. Invoke the command with the driver name to see the sensor
 // values.
+//
+// Connect touch sensor and call ./find -driver lego-ev3-touch
 package main
 
 import (
