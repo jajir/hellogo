@@ -16,5 +16,13 @@ source ./scripts/conf.sh
 readCommandName $1
 #echo "Command is '$command'"
 
-# Deploy executable file to EV3.
-deploy ${command}
+# Make command executable file.
+make ${command}
+
+# Optionally deploy executable file to EV3.
+ if [ "$?" -eq "0" ]
+then
+    # Execute just when program was compiled.
+    deploy ${command}
+fi
+

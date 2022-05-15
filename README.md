@@ -1,9 +1,24 @@
 # Hellogo
 This program is playground in golang with LEGO EV3. It's based on library [github.com/ev3go/ev3dev][2]. Program `print` could print simple drawing with [jkbrickworks.com/telegraph-machine-and-printer/][1]. 
 
-## How to build and eexecute project
+## How to build and execute programs
+ 
+Programs are directory names from `./cmd/`. Following examples use program `find`.
 
-Directory `scripts` contasin all scripts necessary to make executables and tool for uploading them to EV3 brick.
+Directory `scripts` contains all scripts necessary to make executable files and scripts for uploading executable files to EV3 brick. Programs could be compiled and deployed to EV3 brick with folloving command:
+
+```
+./scripts/makeAndDeploy.sh find
+```
+
+or it could be done step by step:
+
+```
+./scripts/make.sh find
+./scripts/deploy.sh find
+```
+
+Note that in ./scripts/conf.sh if hard coded IP of EV3 brick. Check that's correct value.
 
 ## Usefull commands
 
