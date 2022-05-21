@@ -17,7 +17,7 @@ import (
 	"time"
 
 	ev3dev "github.com/ev3go/ev3dev"
-	"github.com/jajir/hellogo/lev3"
+	"github.com/jajir/hellogo/internal/lev3"
 )
 
 var touchSensor lev3.TouchSensor
