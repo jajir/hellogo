@@ -11,7 +11,9 @@
 package main
 
 import (
+	"flag"
 	"fmt"
+	"os"
 
 	ev3dev "github.com/ev3go/ev3dev"
 )
@@ -32,7 +34,7 @@ func printMotorInfo(name string, motor *ev3dev.TachoMotor) {
 	fmt.Printf("Motor '%s' have max speed     : %d\n", name, motor.MaxSpeed())
 }
 
-func printMotors() {
+func printMotors(verbose bool) {
 	var motors = [...]string{"lego-43362",
 		"lego-ev3-l-motor",
 		"lego-ev3-m-motor",
@@ -55,7 +57,9 @@ func printMotors() {
 				//There no such motor connect at given port.
 			} else {
 				fmt.Printf("Found motor %s at port %s\n", driver, port)
-				printMotorInfo(driver, motor)
+				if verbose {
+					printMotorInfo(driver, motor)
+				}
 			}
 		}
 	}
@@ -72,7 +76,7 @@ func printSensorInfo(name string, sensor *ev3dev.Sensor) {
 	fmt.Printf("Sensor '%s' have firmware version: %s\n", name, sensor.FirmwareVersion())
 }
 
-func printSensors() {
+func printSensors(verbose bool) {
 	var sensors = [...]string{"lego-ev3-us",
 		"lego-ev3-gyro",
 		"lego-ev3-color",
@@ -95,14 +99,26 @@ func printSensors() {
 				//There no such motor connect at given port.
 			} else {
 				fmt.Printf("Found sensor %s at port %s\n", driver, port)
-				printSensorInfo(driver, sensor)
+				if verbose {
+					printSensorInfo(driver, sensor)
+				}
 			}
 		}
 	}
 }
 
 func main() {
+	findCmd := flag.NewFlagSet("find", flag.ExitOnError)
+	var verbose = findCmd.Bool("v", false, "Provide verbose information about find peripherial.")
+	var help = findCmd.Bool("h", false, "Provide basic info about command.")
+	findCmd.Parse(os.Args[1:])
+	if *help {
+		fmt.Printf("Find informations about connected peripherials to EV3 brick.\n")
+		fmt.Printf("Usage of find:\n")
+		findCmd.PrintDefaults()
+		os.Exit(0)
+	}
 	fmt.Printf("Starting find info about EV3 brick.\n")
-	printMotors()
-	printSensors()
+	printMotors(*verbose)
+	printSensors(*verbose)
 }
