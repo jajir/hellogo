@@ -67,5 +67,12 @@ Command to let brickman start after booting again is:
 sudo systemctl enable brickman
 ```
 
+## Usefull links
+
+* Which Wi-Fi dongles are compatible with EV3 brick is described at [www.ev3dev.org/docs/networking/][3].
+* Usefull guide [how to connect EV3 brick via cable to computer][4]. After that EV3 brick could be accessed by ssh.
+
 [1]: https://jkbrickworks.com/telegraph-machine-and-printer/ "printer building instruction"
 [2]: https://github.com/ev3go/ev3dev "https://github.com/ev3go/ev3dev"
+[3]: https://www.ev3dev.org/docs/networking/ "https://www.ev3dev.org/docs/networking/"
+[4]: https://www.ev3dev.org/docs/tutorials/connecting-to-the-internet-via-usb/ "https://www.ev3dev.org/docs/tutorials/connecting-to-the-internet-via-usb/"

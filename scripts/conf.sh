@@ -6,7 +6,7 @@
 #
 # Set IP address of EV3 brick.
 #
-IP=192.168.1.46
+IP=192.168.2.2
 
 #
 # Deploy executable to EV3.
@@ -19,7 +19,7 @@ deploy() {
     if [ -f $target ]
     then
         echo "Uploading '${target}' to EV3"
-        scp $target robot@${IP}:/home/robot/
+        scp -Cq $target robot@${IP}:/home/robot/
     else
         echo "File to upload '${target}' doesn't exists."
         exit
