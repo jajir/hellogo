@@ -67,10 +67,77 @@ Command to let brickman start after booting again is:
 sudo systemctl enable brickman
 ```
 
+
+## Unsorted mess
+
+Install library for native working with USD peripherials, golang:
+
+```
+sudo apt update
+sudo apt full-upgrade -y
+sudo apt install -y libusb-1.0-0-dev rsync joe mc htop links dnsmasq
+```
+
+```
+figlet -t -k EV3
+```
+
+
+### Golang
+Compile specific file locally:
+
+```
+go build -o ./bin/usb ./cmd/usb/usb.go
+```
+
+Clear all locally downloaded modules:
+
+```
+go clean -modcache
+```
+
+Allows to compile hellogo with locally adjusted module:
+
+```
+go mod edit -replace github.com/gotmc/libusb/v2=/Users/honza/Documents/projects/github/libusb/
+```
+
+Get all available versions and get specific version localy:
+```
+go list -m -versions github.com/gotmc/libusb
+go get github.com/gotmc/libusb@v1.0.21
+```
+
+### rsync
+
+Because it's not possible to compile C code for controlling USB at local machine. It has to be uploaded to EV3 bricke and compiled there:
+
+```
+rsync -r ./hellogo/ robot@192.168.2.2:/home/robot/hellogo
+rsync -r ./libusb/ robot@192.168.2.2:/home/robot/libusb
+
+```
+
+Because of compatibility problems with usblib version, you'll need to see package version:
+
+```
+dpkg -l | grep libusb
+```
+
+## EV3 Connecting
+Connected EV3 brick is listed as:
+
+```
+root@ev3dev:/home/robot# lsusb
+Bus 001 Device 003: ID 0694:0005 Lego Group Mindstorms EV3
+Bus 001 Device 001: ID 1d6b:0001 Linux Foundation 1.1 root hub
+```
+When second EV3 brick is connect via USB to first one in a few minutes will be accessible.
+
 ## Usefull links
 
 * Which Wi-Fi dongles are compatible with EV3 brick is described at [www.ev3dev.org/docs/networking/][3].
-* Usefull guide [how to connect EV3 brick via cable to computer][4]. After that EV3 brick could be accessed by ssh.
+* Usefull guide [how to connect EV3 brick via cable to computer][4	]. After that EV3 brick could be accessed by ssh.
 
 [1]: https://jkbrickworks.com/telegraph-machine-and-printer/ "printer building instruction"
 [2]: https://github.com/ev3go/ev3dev "https://github.com/ev3go/ev3dev"

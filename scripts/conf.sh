@@ -38,6 +38,18 @@ make(){
 }
 
 #
+# Compile program locally.
+#
+makeLocally(){
+    local name=$1
+    local src=cmd/${name}/${name}.go
+    local target=./bin/${name}
+    echo "Compiling '${src}' to '${target}'"
+    go build -o  ${target} ${src}    
+}
+
+
+#
 # Define command from directory cmd which will be compiled and uploaded to EV3 brick.
 # Command name will store to variable command.
 readCommandName(){
