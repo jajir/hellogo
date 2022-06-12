@@ -6,7 +6,7 @@
 #
 # Set IP address of EV3 brick.
 #
-IP=192.168.2.2
+IP=192.168.2.3
 
 #
 # Deploy executable to EV3.
@@ -45,7 +45,7 @@ makeLocally(){
     local src=cmd/${name}/${name}.go
     local target=./bin/${name}
     echo "Compiling '${src}' to '${target}'"
-    go build -o  ${target} ${src}    
+    go build -o  ${target} ${src}
 }
 
 

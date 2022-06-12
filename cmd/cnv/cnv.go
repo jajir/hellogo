@@ -12,6 +12,8 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+
+	"github.com/jajir/hellogo/internal/lev3"
 )
 
 type Path struct {
@@ -49,19 +51,19 @@ func fileExists(path string) (bool, error) {
 }
 
 func main() {
-	p := filepath.Clean(os.Args[1])
-	fmt.Printf("Reading file: %s\n", p)
-	exists, err := fileExists(p)
+	path := filepath.Clean(os.Args[1])
+	fmt.Printf("Reading file: %s\n", path)
+	exists, err := fileExists(path)
 	if err != nil {
 		fmt.Printf("There is a error: %s", err)
 		log.Fatal(err)
 	}
 	if !exists {
-		log.Fatal(fmt.Errorf("file '%s' doesn't exists", p))
+		log.Fatal(fmt.Errorf("file '%s' doesn't exists", path))
 	}
 
 	//read XML file
-	data, err := ioutil.ReadFile(p)
+	data, err := ioutil.ReadFile(path)
 	if err != nil {
 		fmt.Printf("There is a error: %s", err)
 		log.Fatal(err)
@@ -75,6 +77,20 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fmt.Printf("Title '%s'\n", note.Title)
-	fmt.Println(note.Rect)
+	//Paint rectangles
+	for _, value := range note.Rect {
+		fmt.Printf("Rect '%s'\n", value)
+	}
+
+	//Paint paths
+	for _, value := range note.Path {
+		fmt.Printf("Path '%s'\n", value)
+	}
+
+	plotter := lev3.NewPlotter()
+	plotter.PrintInfo()
+
+	fmt.Printf("Done")
+
+	//A4 size 210 x 297 mm
 }
