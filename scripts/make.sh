@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Deploy binaries to EV3 brick.
+# Compile example project for EV3 brick.
 #
 
 # set correct working directory
@@ -13,8 +13,8 @@ source ./scripts/conf.sh
 #
 # Find command name.
 #
-readCommandName $1
-#echo "Command is '$command'"
+readExampleProjectName $1
+echo "Example project name is '$exampleProjectName'"
 
 # Make command executable file.
-make ${command}
+make ${exampleProjectName}

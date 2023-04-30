@@ -13,16 +13,16 @@ source ./scripts/conf.sh
 #
 # Find command name.
 #
-readCommandName $1
-#echo "Command is '$command'"
+readExampleProjectName $1
+#echo "Example project name is '$exampleProjectName'"
 
 # Make command executable file.
-make ${command}
+make ${exampleProjectName}
 
 # Optionally deploy executable file to EV3.
- if [ "$?" -eq "0" ]
+if [ "$?" -eq "0" ]
 then
     # Execute just when program was compiled.
-    deploy ${command}
+    deploy ${exampleProjectName}
 fi
 

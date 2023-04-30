@@ -57,15 +57,21 @@ sudo systemctl stop brickman
 
 ### Switch off Brickman permanently
 
-To stop starting brickman after loading exute following:
+To stop starting brickman after loading execute following:
 ```
 sudo systemctl disable brickman
-```
-
-Command to let brickman start after booting again is:
+``` Command to let brickman start after booting again is:
 ```
 sudo systemctl enable brickman
+```.
+
+### Switch off EV3
+
+To switch off EV3 brick execute in EV3 shell:
 ```
+sudo shutdown -h now
+```.
+Immediatelly after sending this command EV3 starts glowing red to signalize that is switching off.
 
 
 ## Unsorted mess

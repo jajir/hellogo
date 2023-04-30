@@ -31,34 +31,23 @@ deploy() {
 #
 make(){
     local name=$1
-    local src=cmd/${name}/${name}.go
-    local target=./bin/${name}
+    local src=examples/${name}
+    local fullBin=`readlink -f ./bin/`
+    local target=${fullBin}/${name}
     echo "Compiling '${src}' to '${target}'"
-    GOOS=linux GOARCH=arm GOARM=5 go build -o  ${target} ${src}    
+    (cd ${src} && GOOS=linux GOARCH=arm GOARM=5 go build -o ${target})
 }
-
-#
-# Compile program locally.
-#
-makeLocally(){
-    local name=$1
-    local src=cmd/${name}/${name}.go
-    local target=./bin/${name}
-    echo "Compiling '${src}' to '${target}'"
-    go build -o  ${target} ${src}
-}
-
 
 #
 # Define command from directory cmd which will be compiled and uploaded to EV3 brick.
 # Command name will store to variable command.
-readCommandName(){
+readExampleProjectName(){
     local param=$1
     if [ -z $param ]
     then
-        echo "Missing parameter program name. Program name is dir name from './cmd/'"
+        echo "Missing parameter program name. Program name is dir name from './examples/'"
         exit
     fi
-    command=$param
+    exampleProjectName=$param
 }
 
