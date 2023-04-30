@@ -1,9 +1,10 @@
-package lev3
+package ev3control
 
 import (
+	"time"
+
 	ev3dev "github.com/ev3go/ev3dev"
 	log "github.com/sirupsen/logrus"
-	"time"
 )
 
 type TouchSensor struct {

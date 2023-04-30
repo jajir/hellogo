@@ -1,4 +1,4 @@
-package lev3
+package ev3control
 
 import (
 	"log"
