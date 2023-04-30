@@ -1,5 +1,5 @@
 # Hellogo
-This program is playground in golang with LEGO EV3. It's based on library [github.com/ev3go/ev3dev][2]. Program `print` could print simple drawing with [jkbrickworks.com/telegraph-machine-and-printer/][1]. 
+This program is playground in golang with LEGO EV3. This project is based on great project [ev3dev.org][5]. This porgram use golang library [github.com/ev3go/ev3dev][2]. Program `print` could print simple drawing with [jkbrickworks.com/telegraph-machine-and-printer/][1]. 
 
 ## How to build programs and deploy them to EV3
  
@@ -143,3 +143,4 @@ When second EV3 brick is connect via USB to first one in a few minutes will be a
 [2]: https://github.com/ev3go/ev3dev "https://github.com/ev3go/ev3dev"
 [3]: https://www.ev3dev.org/docs/networking/ "https://www.ev3dev.org/docs/networking/"
 [4]: https://www.ev3dev.org/docs/tutorials/connecting-to-the-internet-via-usb/ "https://www.ev3dev.org/docs/tutorials/connecting-to-the-internet-via-usb/"
+[5]: https://www.ev3dev.org "https://www.ev3dev.org"
