@@ -13,18 +13,24 @@ func main() {
 	ev3control.Display.Write(0, 10, "Caligration started")
 	go waitingForBack(konec)
 
-	motor := ev3control.NewEv3lmotor("outA", "axisX")
-	motor.PrintInfo()
-	go calibrate(motor)
+	axis := ev3control.NewAxis("axisX", "outA", "in1")
+	go initializeAxis(&axis)
 
 	k := <-konec
 	log.Info("Shutting down, bacause of " + k + "\n")
 	ev3control.Speaker.Beep()
-	motor.StopMotor()
 	ev3control.Display.Clean()
 	ev3control.Display.Write(0, 10, "Back button was pressed.")
 	ev3control.Display.Write(0, 25, "Program is terminated.")
 	ev3control.Display.Close()
+}
+
+func initializeAxis(axis *ev3control.Axis) {
+	err := axis.Calibrate()
+	if err != nil {
+		log.Fatalf("Unable to initialize: %v", err)
+	}
+	axis.PrintInfo()
 }
 
 func waitingForBack(konec chan string) {
@@ -38,46 +44,4 @@ func waitingForBack(konec chan string) {
 			konec <- "Button Back was pressed."
 		}
 	}
-}
-
-func calibrate(motor ev3control.Ev3lmotor) {
-	maxSpeed := motor.MaxSpeed()
-	moveSpeed := maxSpeed / 5
-	rollBackSpeed := maxSpeed / 10
-	touchSensor := ev3control.NewTouchSensor("in1")
-	touchSensor.PrintInfo()
-
-	// start motor in one direction
-	motor.SetNormalPolarity()
-
-	motor.StartMotor(moveSpeed)
-
-	//wait for touch sensor signal and mark position
-	touchSensor.WaitUntilPressed()
-	motor.StopMotor()
-	motor.WaitUntilMotorStop()
-	motor.ReversePolarity()
-	motor.StartMotor(rollBackSpeed)
-	touchSensor.WaitUntilReleased()
-	positionStart := motor.Position()
-
-	//measure oposit side of axis
-	motor.StartMotor(moveSpeed)
-
-	//wait for touch sensor signal and mark position
-	touchSensor.WaitUntilPressed()
-	motor.StopMotor()
-	motor.WaitUntilMotorStop()
-	motor.ReversePolarity()
-	motor.StartMotor(rollBackSpeed)
-	touchSensor.WaitUntilReleased()
-	positionEnd := motor.Position()
-
-	motor.StopMotor()
-
-	//positions and difference between them are definition of robot axis
-	log.WithFields(log.Fields{
-		"Start position": positionStart,
-		"End position":   positionEnd,
-	}).Info("Calibratio is done.")
 }

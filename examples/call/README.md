@@ -2,8 +2,6 @@
 
 This tool help to demonstrate calligration process of large motor.
 
-
-
 Motor should move in one axis. Axis starts and ends at some points. It's not possible to say at which place is motor really placed. Because of that motor for axis have to be calibrate at start.
 
 EV3 have layoyour of connector:
