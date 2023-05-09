@@ -31,7 +31,17 @@ func (axis *Axis) PrintInfo() {
 		"End position":     axis.positionEnd,
 		"Current position": axis.position,
 	}).Info("Information about Axis.")
+}
 
+func (axis *Axis) IsCalibrated() bool {
+	return axis.positionStart != -1 && axis.positionEnd != -1
+}
+
+func (axis *Axis) AxisLength() (int, error) {
+	if axis.positionStart == -1 && axis.positionEnd == -1 {
+		return -1, fmt.Errorf("length of axis '%s' can't be determined because axis is not calibrated", axis.name)
+	}
+	return axis.positionEnd - axis.positionStart, nil
 }
 
 func (axis *Axis) moveSpeed() int {
