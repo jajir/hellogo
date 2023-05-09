@@ -10,7 +10,14 @@ type Line struct {
 	points     []Point
 }
 
-func (c Line) String() string {
+func NewLine(startPoint Point, points []Point) *Line {
+	l := new(Line)
+	l.startPoint = startPoint
+	l.points = points
+	return l
+}
+
+func (c *Line) String() string {
 	return fmt.Sprintf("Line[%s, %v]", c.startPoint.String(), c.points)
 }
 

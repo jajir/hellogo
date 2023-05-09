@@ -9,13 +9,13 @@ import (
 
 func main() {
 	log.Info("Startint of printing")
-
-	p := readsvg.Point{21, 12}
-	p = nil
-	log.Info("Point? " + p + "\n")
-	var konec = make(chan string)
-	ev3control.Display.Clean()
+	p := readsvg.Point{0, 0}
+	var l readsvg.Line
+	l = readsvg.NewLine{p, []readsvg.Point{{10, 0}, {10, 10}, {0, 10}, {0, 0}}}
+	log.Info("Line " + l.String() + "")
 	ev3control.Display.Write(0, 10, "Caligration started")
+	ev3control.Display.Clean()
+	var konec = make(chan string)
 	go waitingForBack(konec)
 
 	axis := ev3control.NewAxis("axisX", "outA", "in1")
